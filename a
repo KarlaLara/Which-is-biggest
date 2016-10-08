@@ -1,0 +1,39 @@
+@File: whichisthebiggest.s
+	.global _start
+
+_start:
+	LDR R2,=A 					@load numbers in A-C
+	LDR R2, [R2]
+	LDR R3,=B
+	LDR R3, [R3]
+	LDR R4,=C
+	LDR R4, [R4]
+
+	LDR R1, = message_A			@load message A
+	CMP R2, R3					@compare A and B
+	BLE who_is_the_biggest 		@if B is greater, go to function
+	MOV R3, R4					@make C the new B
+	CMP R2, R3					@compare B and C
+	BLE who_is_the_biggest_2	@if C is bigger, go to function
+	B exit						@end it, were done
+
+who_is_the_biggest: 			
+	MOV R2, R3 					@since b is bigger, make B the new A
+	LDR R1, =message_B			@change the message to B, since A isnt bigger
+
+who_is_the_biggest_2:
+	MOV R2, R3 					@put C in the number one spot. R2 is the answer
+	LDR R1, =message_C 			@change to message C since it is bigger than B
+
+exit:
+	MOV R0, #1					@necessary to bring string
+	SWI 0x69					@prints string
+	SWI 0x11 					@stop running program
+
+.data
+A:	.word 34					@declare variables, numbers
+B:	.word 10
+C:	.word 54
+message_A:	.asciz "A > B and A > C"	@declare strings
+message_B:	.asciz "B > C and B > A"
+message_C:	.asciz "C > A and C > B"
